@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    {{template "widgets/head.html" .}}
+</head>
+<body>
+<div class="manual-reader">
+    {{template "widgets/header.html" .}}
+    <div class="container manual-body">
+        <div class="row">
+            <div class="page-left">
+                {{template "manager/menu.html" .}}
+            </div>
+            <div class="page-right">
+                <div class="m-box">
+                    <div class="box-head">
+                        <strong class="box-title"> 配置管理</strong>
+                        <a href="{{urlfor "ManagerController.RebuildAllIndex"}}" class="ajax-get pull-right btn btn-success">更新全量索引</a>
+                    </div>
+                </div>
+                <div class="box-body" style="padding-bottom: 200px;">
+                    <form method="post" id="gloablEditForm" action="{{urlfor "ManagerController.Setting"}}">
+                            <div class="form-group">
+                                <label>网站名称</label>
+                                <input type="text" class="form-control" name="SITE_NAME" id="siteName" placeholder="网站标题" value="{{.SITE_NAME.OptionValue}}">
+                            </div>
+                            <div class="form-group">
+                                <label>网站备案</label>
+                                <input type="text" class="form-control" name="ICP" id="ICP" placeholder="网站备案" value="{{.ICP.OptionValue}}">
+                            </div>
+                        <div class="form-group">
+                            <label>版本控制</label>
+                            <input type="number" name="ENABLE_DOCUMENT_HISTORY" class="form-control" value="{{.ENABLE_DOCUMENT_HISTORY.OptionValue}}">
+                            <div class="help-block">如果启用版本控制，请填写大于0的数字，表示每个文档的最大版本数。</div>
+                        </div>
+
+
+                            {{/*肯定要允许游客进行访问*/}}
+                            <div class="form-group hide">
+                                <label>启用匿名访问</label>
+                                <div class="radio">
+                                    <label class="radio-inline">
+                                        <input type="radio" checked name="ENABLE_ANONYMOUS" value="true">开启<span class="text"></span>
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="ENABLE_ANONYMOUS" value="false">关闭<span class="text"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                        {{/*肯定要允许用户注册行为*/}}
+                        <div class="form-group hide">
+                            <label>启用注册</label>
+                            <div class="radio">
+                                <label class="radio-inline">
+                                    <input type="radio" checked name="ENABLED_REGISTER" value="true">开启<span class="text"></span>
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="ENABLED_REGISTER" value="false">关闭<span class="text"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>启用验证码</label>
+                            <div class="radio">
+                                <label class="radio-inline">
+                                    <input type="radio" {{if eq .ENABLED_CAPTCHA.OptionValue "true"}}checked{{end}} name="ENABLED_CAPTCHA" value="true">开启<span class="text"></span>
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" {{if eq .ENABLED_CAPTCHA.OptionValue "false"}}checked{{end}} name="ENABLED_CAPTCHA" value="false">关闭<span class="text"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>开启QQ登录</label>
+                            <div class="radio">
+                                <label class="radio-inline">
+                                    <input type="radio" {{if eq .LOGIN_QQ.OptionValue "true"}}checked{{end}} name="LOGIN_QQ" value="true">开启<span class="text"></span>
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" {{if eq .LOGIN_QQ.OptionValue "false"}}checked{{end}} name="LOGIN_QQ" value="false">关闭<span class="text"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>开启GitHub登录</label>
+                            <div class="radio">
+                                <label class="radio-inline">
+                                    <input type="radio" {{if eq .LOGIN_GITHUB.OptionValue "true"}}checked{{end}} name="LOGIN_GITHUB" value="true">开启<span class="text"></span>
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" {{if eq .LOGIN_GITHUB.OptionValue "false"}}checked{{end}} name="LOGIN_GITHUB" value="false">关闭<span class="text"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>开启码云登录</label>
+                            <div class="radio">
+                                <label class="radio-inline">
+                                    <input type="radio" {{if eq .LOGIN_GITEE.OptionValue "true"}}checked{{end}} name="LOGIN_GITEE" value="true">开启<span class="text"></span>
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" {{if eq .LOGIN_GITEE.OptionValue "false"}}checked{{end}} name="LOGIN_GITEE" value="false">关闭<span class="text"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>一键采集器，是否仅对管理员开放</label>
+                            <div class="radio">
+                                <label class="radio-inline">
+                                    <input type="radio" {{if eq .SPIDER.OptionValue "true"}}checked{{end}} name="SPIDER" value="true">是<span class="text"></span>
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" {{if eq .SPIDER.OptionValue "false"}}checked{{end}} name="SPIDER" value="false">否<span class="text"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>是否开启书籍审核( <span class="text-muted"> 非管理员发布公开的书籍项目，是否需要进行审核</span> )</label>
+                            <div class="radio">
+                                <label class="radio-inline">
+                                    <input type="radio" {{if eq .CHECK_BOOK.OptionValue "true"}}checked{{end}} name="CHECK_BOOK" value="true">是<span class="text"></span>
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" {{if eq .CHECK_BOOK.OptionValue "false"}}checked{{end}} name="CHECK_BOOK" value="false">否<span class="text"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>是否开启全文搜索( <span class="text-muted">每次重新启用全文搜索，请务必点击右上角的 <strong>更新全量索引</strong> 按钮，以免用户搜索不到结果 </span> )</label>
+                            <div class="radio">
+                                <label class="radio-inline">
+                                    <input type="radio" {{if eq .ELASTICSEARCH_ON.OptionValue "true"}}checked{{end}} name="ELASTICSEARCH_ON" value="true">是<span class="text"></span>
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" {{if eq .ELASTICSEARCH_ON.OptionValue "false"}}checked{{end}} name="ELASTICSEARCH_ON" value="false">否<span class="text"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>ElasticSearch全文搜索地址</label>
+                            <input type="text" name="ELASTICSEARCH_HOST" class="form-control" value="{{.ELASTICSEARCH_HOST.OptionValue}}">
+                        </div>
+
+                        <div class="form-group">
+                            <label>默认搜索</label>
+                            <select name="DEFAULT_SEARCH" class="form-control">
+                                <option {{if eq .DEFAULT_SEARCH.OptionValue "book"}}selected{{end}} value="book">搜索书籍</option>
+                                <option {{if eq .DEFAULT_SEARCH.OptionValue "doc"}}selected{{end}} value="doc">搜索文档</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>搜索结果精度( <span class="text-muted">可选值：0 ~ 100，值越大，精度越大</span> )</label>
+                            <input type="number" min="0" class="form-control" max="100" name="SEARCH_ACCURACY" value="{{.SEARCH_ACCURACY.OptionValue}}">
+                        </div>
+
+                        <div class="form-group">
+                            <label>是否开启关联书籍功能( <span class="text-muted">数值，大于0表示开启并把关联结果缓存xx天，其他值表示不开启。<strong class="text-danger">需开启全文搜索!!!</strong></span> )</label>
+                            <input type="number" min="0" max="365" class="form-control" name="RELATE_BOOK" value="{{.RELATE_BOOK.OptionValue}}">
+                        </div>
+
+                        <div class="form-group">
+                            <label>站点统计</label>
+                            <textarea name="TONGJI" PLACEHOLDER="站点统计代码"  class="form-control" rows="3">{{.TONGJI.OptionValue}}</textarea>
+                        </div>
+
+
+                        <div class="form-group">
+                            <button type="submit" id="btnSaveBookInfo" class="btn btn-success" data-loading-text="保存中...">保存修改</button>
+                            <span id="form-error-message" class="error-message"></span>
+                        </div>
+                        </form>
+
+                    <div class="clearfix"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{{/*<script src="/static/jquery/1.12.4/jquery.min.js" type="text/javascript"></script>*/}}
+<script src="/static/jquery/1.12.4/jquery.min.js" type="text/javascript"></script>
+{{/*<script src="/static/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>*/}}
+<script src="/static/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="{{$.StaticDomain}}/static/js/toast.script.js" type="text/javascript"></script>
+<script src="{{$.StaticDomain}}/static/js/jquery.form.js" type="text/javascript"></script>
+<script src="/static/js/main.js?version={{$.Version}}" type="text/javascript"></script>
+<script type="text/javascript">
+    $(function () {
+        $("#gloablEditForm").ajaxForm({
+            beforeSubmit : function () {
+                var title = $.trim($("#siteName").val());
+
+                if (title === ""){
+                    return showError("网站标题不能为空");
+                }
+                $("#btnSaveBookInfo").button("loading");
+            },success : function (res) {
+                if(res.errcode === 0) {
+                    showSuccess("保存成功")
+                }else{
+                    showError(res.message);
+                }
+                $("#btnSaveBookInfo").button("reset");
+            }
+        });
+    });
+</script>
+</body>
+</html>
