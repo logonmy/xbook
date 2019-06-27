@@ -74,8 +74,8 @@ func isReadable(identify, token string, this *DocumentController) *models.BookRe
 			}
 		}
 		if book.PrivateToken != "" && !isOk {
-			//如果有访问的Token，并且该项目设置了访问Token，并且和用户提供的相匹配，则记录到Session中.
-			//如果用户未提供Token且用户登录了，则判断用户是否参与了该项目.
+			//如果有访问的Token，并且该图书设置了访问Token，并且和用户提供的相匹配，则记录到Session中.
+			//如果用户未提供Token且用户登录了，则判断用户是否参与了该图书.
 			//如果用户未登录，则从Session中读取Token.
 			if token != "" && strings.EqualFold(token, book.PrivateToken) {
 				this.SetSession(identify, token)
@@ -235,7 +235,7 @@ func (this *DocumentController) Read() {
 	); err != nil {
 		beego.Error(err.Error())
 	}
-	//项目阅读人次+1
+	//图书阅读人次+1
 	if err := models.SetIncreAndDecre("md_books", "vcnt",
 		fmt.Sprintf("book_id=%v", doc.BookId),
 		true, 1,
@@ -341,7 +341,7 @@ func (this *DocumentController) Edit() {
 	if this.Member.IsAdministrator() {
 		book, err := models.NewBook().FindByFieldFirst("identify", identify)
 		if err != nil {
-			this.JsonResult(6002, "项目不存在或权限不足")
+			this.JsonResult(6002, "图书不存在或权限不足")
 		}
 		bookResult = book.ToBookResult()
 	} else {
@@ -352,7 +352,7 @@ func (this *DocumentController) Edit() {
 		}
 
 		if bookResult.RoleId == conf.BookObserver {
-			this.JsonResult(6002, "项目不存在或权限不足")
+			this.JsonResult(6002, "图书不存在或权限不足")
 		}
 	}
 
@@ -395,7 +395,7 @@ func (this *DocumentController) Edit() {
 
 //创建一个文档.
 func (this *DocumentController) Create() {
-	identify := this.GetString("identify")        //书籍项目标识
+	identify := this.GetString("identify")        //书籍图书标识
 	docIdentify := this.GetString("doc_identify") //新建的文档标识
 	docName := this.GetString("doc_name")
 	parentId, _ := this.GetInt("parent_id", 0)
@@ -419,13 +419,13 @@ func (this *DocumentController) Create() {
 		}
 
 		if bookIdentify == "" {
-			this.JsonResult(1, "文档项目参数不正确")
+			this.JsonResult(1, "文档图书参数不正确")
 		}
 
 		var book models.Book
 		o.QueryTable("md_books").Filter("Identify", bookIdentify).One(&book, "BookId")
 		if book.BookId == 0 {
-			this.JsonResult(1, "文档项目未创建")
+			this.JsonResult(1, "文档图书未创建")
 		}
 
 		d, _ := models.NewDocument().FindByBookIdAndDocIdentify(book.BookId, docIdentify)
@@ -442,7 +442,7 @@ func (this *DocumentController) Create() {
 		book, err := models.NewBook().FindByFieldFirst("identify", identify)
 		if err != nil {
 			beego.Error(err)
-			this.JsonResult(6002, "项目不存在或权限不足")
+			this.JsonResult(6002, "图书不存在或权限不足")
 		}
 		bookId = book.BookId
 	} else {
@@ -450,7 +450,7 @@ func (this *DocumentController) Create() {
 
 		if err != nil || bookResult.RoleId == conf.BookObserver {
 			beego.Error("FindByIdentify => ", err)
-			this.JsonResult(6002, "项目不存在或权限不足")
+			this.JsonResult(6002, "图书不存在或权限不足")
 		}
 		bookId = bookResult.BookId
 	}
@@ -494,7 +494,7 @@ func (this *DocumentController) CreateMulti() {
 	bookId, _ := this.GetInt("book_id")
 
 	if !(this.Member.MemberId > 0 && bookId > 0) {
-		this.JsonResult(1, "操作失败：只有项目创始人才能批量添加")
+		this.JsonResult(1, "操作失败：只有图书创始人才能批量添加")
 	}
 
 	var book models.Book
@@ -601,7 +601,7 @@ func (this *DocumentController) Upload() {
 			this.JsonResult(6007, "文档不存在")
 		}
 		if doc.BookId != bookId {
-			this.JsonResult(6008, "文档不属于指定的项目")
+			this.JsonResult(6008, "文档不属于指定的图书")
 		}
 	}
 
@@ -702,18 +702,18 @@ func (this *DocumentController) DownloadAttachment() {
 	}
 	bookId := 0
 
-	//判断用户是否参与了项目
+	//判断用户是否参与了图书
 	bookResult, err := models.NewBookResult().FindByIdentify(identify, memberId)
 
 	if err != nil {
-		//判断项目公开状态
+		//判断图书公开状态
 		book, err := models.NewBook().FindByFieldFirst("identify", identify)
 		if err != nil {
 			this.Abort("404")
 		}
 		//如果不是超级管理员则判断权限
 		if this.Member == nil || this.Member.Role != conf.MemberSuperRole {
-			//如果项目是私有的，并且token不正确
+			//如果图书是私有的，并且token不正确
 			if (book.PrivatelyOwned == 1 && token == "") || (book.PrivatelyOwned == 1 && book.PrivateToken != token) {
 				this.Abort("404")
 			}
@@ -793,14 +793,14 @@ func (this *DocumentController) Delete() {
 		book, err := models.NewBook().FindByFieldFirst("identify", identify)
 		if err != nil {
 			beego.Error("FindByIdentify => ", err)
-			this.JsonResult(6002, "项目不存在或权限不足")
+			this.JsonResult(6002, "图书不存在或权限不足")
 		}
 		bookId = book.BookId
 	} else {
 		bookResult, err := models.NewBookResult().FindByIdentify(identify, this.Member.MemberId)
 		if err != nil || bookResult.RoleId == conf.BookObserver {
 			beego.Error("FindByIdentify => ", err)
-			this.JsonResult(6002, "项目不存在或权限不足")
+			this.JsonResult(6002, "图书不存在或权限不足")
 		}
 		bookId = bookResult.BookId
 	}
@@ -815,11 +815,11 @@ func (this *DocumentController) Delete() {
 		this.JsonResult(6003, "删除失败")
 	}
 
-	//如果文档所属项目错误
+	//如果文档所属图书错误
 	if doc.BookId != bookId {
 		this.JsonResult(6004, "参数错误")
 	}
-	//递归删除项目下的文档以及子文档
+	//递归删除图书下的文档以及子文档
 	err = doc.RecursiveDocument(doc.DocumentId)
 	if err != nil {
 		beego.Error(err.Error())
@@ -853,7 +853,7 @@ func (this *DocumentController) Content() {
 	if this.Member.IsAdministrator() {
 		book, err := models.NewBook().FindByFieldFirst("identify", identify)
 		if err != nil {
-			this.JsonResult(6002, "项目不存在或权限不足")
+			this.JsonResult(6002, "图书不存在或权限不足")
 		}
 		bookId = book.BookId
 	} else {
@@ -861,7 +861,7 @@ func (this *DocumentController) Content() {
 
 		if err != nil || bookResult.RoleId == conf.BookObserver {
 			beego.Error("FindByIdentify => ", err)
-			this.JsonResult(6002, "项目不存在或权限不足")
+			this.JsonResult(6002, "图书不存在或权限不足")
 		}
 		bookId = bookResult.BookId
 	}
@@ -918,7 +918,7 @@ func (this *DocumentController) Content() {
 		this.JsonResult(6003, "读取文档错误")
 	}
 	if doc.BookId != bookId {
-		this.JsonResult(6004, "保存的文档不属于指定项目")
+		this.JsonResult(6004, "保存的文档不属于指定图书")
 	}
 	if doc.Version != version && !strings.EqualFold(isCover, "yes") {
 		beego.Info("%d|", version, doc.Version)
@@ -1080,7 +1080,7 @@ func (this *DocumentController) Export() {
 	this.JsonResult(1, "下载失败，您要下载的文档当前并未生成可下载文档。")
 }
 
-//生成项目访问的二维码.
+//生成图书访问的二维码.
 
 func (this *DocumentController) QrCode() {
 	this.Prepare()
@@ -1115,7 +1115,7 @@ func (this *DocumentController) QrCode() {
 	}
 }
 
-//项目内搜索.
+//图书内搜索.
 func (this *DocumentController) Search() {
 	identify := this.Ctx.Input.Param(":key")
 	token := this.GetString("token")
@@ -1184,7 +1184,7 @@ func (this *DocumentController) History() {
 		book, err := models.NewBook().FindByFieldFirst("identify", identify)
 		if err != nil {
 			beego.Error("FindByIdentify => ", err)
-			this.Data["ErrorMessage"] = "项目不存在或权限不足"
+			this.Data["ErrorMessage"] = "图书不存在或权限不足"
 			return
 		}
 		bookId = book.BookId
@@ -1194,7 +1194,7 @@ func (this *DocumentController) History() {
 
 		if err != nil || bookResult.RoleId == conf.BookObserver {
 			beego.Error("FindByIdentify => ", err)
-			this.Data["ErrorMessage"] = "项目不存在或权限不足"
+			this.Data["ErrorMessage"] = "图书不存在或权限不足"
 			return
 		}
 		bookId = bookResult.BookId
@@ -1213,7 +1213,7 @@ func (this *DocumentController) History() {
 		this.Data["ErrorMessage"] = "获取历史失败"
 		return
 	}
-	//如果文档所属项目错误
+	//如果文档所属图书错误
 	if doc.BookId != bookId {
 		this.Data["ErrorMessage"] = "参数错误"
 		return
@@ -1253,7 +1253,7 @@ func (this *DocumentController) DeleteHistory() {
 		book, err := models.NewBook().FindByFieldFirst("identify", identify)
 		if err != nil {
 			beego.Error("FindByIdentify => ", err)
-			this.JsonResult(6002, "项目不存在或权限不足")
+			this.JsonResult(6002, "图书不存在或权限不足")
 		}
 		bookId = book.BookId
 	} else {
@@ -1261,7 +1261,7 @@ func (this *DocumentController) DeleteHistory() {
 
 		if err != nil || bookResult.RoleId == conf.BookObserver {
 			beego.Error("FindByIdentify => ", err)
-			this.JsonResult(6002, "项目不存在或权限不足")
+			this.JsonResult(6002, "图书不存在或权限不足")
 		}
 		bookId = bookResult.BookId
 	}
@@ -1276,7 +1276,7 @@ func (this *DocumentController) DeleteHistory() {
 		this.JsonResult(6001, "获取历史失败")
 	}
 
-	//如果文档所属项目错误
+	//如果文档所属图书错误
 	if doc.BookId != bookId {
 		this.JsonResult(6001, "参数错误")
 	}
@@ -1308,14 +1308,14 @@ func (this *DocumentController) RestoreHistory() {
 		book, err := models.NewBook().FindByFieldFirst("identify", identify)
 		if err != nil {
 			beego.Error("FindByIdentify => ", err)
-			this.JsonResult(6002, "项目不存在或权限不足")
+			this.JsonResult(6002, "图书不存在或权限不足")
 		}
 		bookId = book.BookId
 	} else {
 		bookResult, err := models.NewBookResult().FindByIdentify(identify, this.Member.MemberId)
 		if err != nil || bookResult.RoleId == conf.BookObserver {
 			beego.Error("FindByIdentify => ", err)
-			this.JsonResult(6002, "项目不存在或权限不足")
+			this.JsonResult(6002, "图书不存在或权限不足")
 		}
 		bookId = bookResult.BookId
 	}
@@ -1330,7 +1330,7 @@ func (this *DocumentController) RestoreHistory() {
 		beego.Error("Delete => ", err)
 		this.JsonResult(6001, "获取历史失败")
 	}
-	//如果文档所属项目错误
+	//如果文档所属图书错误
 	if doc.BookId != bookId {
 		this.JsonResult(6001, "参数错误")
 	}

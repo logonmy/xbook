@@ -96,7 +96,7 @@ func (m *Comment) Insert() (err error) {
 
 	var book *Book
 	book, err = NewBook().Find(document.BookId)
-	if err != nil { //如果评论的项目不存在
+	if err != nil { //如果评论的图书不存在
 		return err
 	}
 

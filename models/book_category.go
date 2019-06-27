@@ -6,7 +6,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-//文档项目与分类关联表，一个文档项目可以属于多个分类
+//文档图书与分类关联表，一个文档图书可以属于多个分类
 type BookCategory struct {
 	Id         int //自增主键
 	BookId     int //书籍id

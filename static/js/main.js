@@ -85,7 +85,7 @@ function alertTips(cls,msg,timeout,url) {
 $(function () {
 
 
-    //文档项目评分
+    //文档图书评分
     if($("body").attr("id")=="bookstack-intro"){
         var stars=$(".cursor-pointer .fa")
         $(".cursor-pointer .fa").hover(function () {

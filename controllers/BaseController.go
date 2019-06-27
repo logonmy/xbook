@@ -460,7 +460,7 @@ func (this *BaseController) SetFollow() {
 	this.JsonResult(0, "您已经成功关注了Ta")
 }
 
-// 项目静态文件
+// 图书静态文件
 func (this *BaseController) ProjectsFile() {
 	prefix := "projects/"
 	object := prefix + this.GetString(":splat")

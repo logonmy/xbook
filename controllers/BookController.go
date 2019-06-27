@@ -93,7 +93,7 @@ func (this *BookController) Star() {
 
 	id, _ := this.GetInt(":id")
 	if id <= 0 {
-		this.JsonResult(1, "收藏失败，项目不存在")
+		this.JsonResult(1, "收藏失败，图书不存在")
 	}
 
 	cancel, err := new(models.Star).Star(uid, id)
@@ -112,7 +112,7 @@ func (this *BookController) Star() {
 	this.JsonResult(0, "添加收藏成功", data)
 }
 
-// Dashboard 项目概要 .
+// Dashboard 图书概要 .
 func (this *BookController) Dashboard() {
 
 	this.TplName = "book/dashboard.html"
@@ -135,7 +135,7 @@ func (this *BookController) Dashboard() {
 	this.Data["Model"] = *book
 }
 
-// Setting 项目设置 .
+// Setting 图书设置 .
 func (this *BookController) Setting() {
 
 	key := this.Ctx.Input.Param(":key")
@@ -181,7 +181,7 @@ func (this *BookController) Setting() {
 	this.TplName = "book/setting.html"
 }
 
-//保存项目信息
+//保存图书信息
 func (this *BookController) SaveBook() {
 
 	bookResult, err := this.IsPermission()
@@ -202,7 +202,7 @@ func (this *BookController) SaveBook() {
 	editor := strings.TrimSpace(this.GetString("editor"))
 
 	if strings.Count(description, "") > 500 {
-		this.JsonResult(6004, "项目描述不能大于500字")
+		this.JsonResult(6004, "图书描述不能大于500字")
 	}
 	if commentStatus != "open" && commentStatus != "closed" && commentStatus != "group_only" && commentStatus != "registered_only" {
 		commentStatus = "closed"
@@ -258,7 +258,7 @@ func (this *BookController) SaveBook() {
 	this.JsonResult(0, "ok", bookResult)
 }
 
-//设置项目私有状态.
+//设置图书私有状态.
 func (this *BookController) PrivatelyOwned() {
 
 	status := this.GetString("status")
@@ -304,7 +304,7 @@ func (this *BookController) PrivatelyOwned() {
 	this.JsonResult(0, "ok")
 }
 
-// Transfer 转让项目.
+// Transfer 转让图书.
 func (this *BookController) Transfer() {
 
 	account := this.GetString("account")
@@ -340,7 +340,7 @@ func (this *BookController) Transfer() {
 	this.JsonResult(0, "ok")
 }
 
-//上传项目封面.
+//上传图书封面.
 func (this *BookController) UploadCover() {
 
 	bookResult, err := this.IsPermission()
@@ -502,7 +502,7 @@ func (this *BookController) Users() {
 	this.TplName = "book/users.html"
 }
 
-// Create 创建项目.
+// Create 创建图书.
 func (this *BookController) Create() {
 
 	bookName := strings.TrimSpace(this.GetString("book_name", ""))
@@ -514,28 +514,28 @@ func (this *BookController) Create() {
 	commentStatus := this.GetString("comment_status")
 
 	if bookName == "" {
-		this.JsonResult(6001, "项目名称不能为空")
+		this.JsonResult(6001, "图书名称不能为空")
 	}
 
 	if identify == "" {
-		this.JsonResult(6002, "项目标识不能为空")
+		this.JsonResult(6002, "图书标识不能为空")
 	}
 
 	ok, err1 := regexp.MatchString(`^[a-zA-Z0-9_\-\.]*$`, identify)
 	if !ok || err1 != nil {
-		this.JsonResult(6003, "项目标识只能包含字母、数字，以及“-”、“.”和“_”符号，且不能是纯数字")
+		this.JsonResult(6003, "图书标识只能包含字母、数字，以及“-”、“.”和“_”符号，且不能是纯数字")
 	}
 
 	if num, _ := strconv.Atoi(identify); strconv.Itoa(num) == identify {
-		this.JsonResult(6003, "项目标识不能是纯数字")
+		this.JsonResult(6003, "图书标识不能是纯数字")
 	}
 
 	if strings.Count(identify, "") > 50 {
-		this.JsonResult(6004, "项目标识不能超过50字")
+		this.JsonResult(6004, "图书标识不能超过50字")
 	}
 
 	if strings.Count(description, "") > 500 {
-		this.JsonResult(6004, "项目描述不能大于500字")
+		this.JsonResult(6004, "图书描述不能大于500字")
 	}
 
 	if privatelyOwned != 0 && privatelyOwned != 1 {
@@ -548,7 +548,7 @@ func (this *BookController) Create() {
 	book := models.NewBook()
 
 	if books, _ := book.FindByField("identify", identify); len(books) > 0 {
-		this.JsonResult(6006, "项目标识已存在")
+		this.JsonResult(6006, "图书标识已存在")
 	}
 
 	book.Label = utils.SegWord(bookName)
@@ -577,7 +577,7 @@ func (this *BookController) Create() {
 
 	if err := book.Insert(); err != nil {
 		logs.Error("Insert => ", err)
-		this.JsonResult(6005, "保存项目失败")
+		this.JsonResult(6005, "保存图书失败")
 	}
 
 	bookResult, err := models.NewBookResult().FindByIdentify(book.Identify, this.Member.MemberId)
@@ -601,7 +601,7 @@ func (this *BookController) CreateToken() {
 		}
 
 		if err == orm.ErrNoRows {
-			this.JsonResult(404, "项目不存在")
+			this.JsonResult(404, "图书不存在")
 		}
 
 		logs.Error("生成阅读令牌失败 =>", err)
@@ -612,12 +612,12 @@ func (this *BookController) CreateToken() {
 
 	book := models.NewBook()
 	if _, err := book.Find(bookResult.BookId); err != nil {
-		this.JsonResult(6001, "项目不存在")
+		this.JsonResult(6001, "图书不存在")
 	}
 
 	if action == "create" {
 		if bookResult.PrivatelyOwned == 0 {
-			this.JsonResult(6001, "公开项目不能创建阅读令牌")
+			this.JsonResult(6001, "公开图书不能创建阅读令牌")
 		}
 
 		book.PrivateToken = string(utils.Krand(conf.GetTokenSize(), utils.KC_RAND_KIND_ALL))
@@ -636,7 +636,7 @@ func (this *BookController) CreateToken() {
 	this.JsonResult(0, "ok", "")
 }
 
-// Delete 删除项目.
+// Delete 删除图书.
 func (this *BookController) Delete() {
 
 	bookResult, err := this.IsPermission()
@@ -645,22 +645,22 @@ func (this *BookController) Delete() {
 	}
 
 	if bookResult.RoleId != conf.BookFounder {
-		this.JsonResult(6002, "只有创始人才能删除项目")
+		this.JsonResult(6002, "只有创始人才能删除图书")
 	}
 
 	//用户密码
 	pwd := this.GetString("password")
 	if m, err := models.NewMember().Login(this.Member.Account, pwd); err != nil || m.MemberId == 0 {
-		this.JsonResult(1, "项目删除失败，您的登录密码不正确")
+		this.JsonResult(1, "图书删除失败，您的登录密码不正确")
 	}
 
 	err = models.NewBook().ThoroughDeleteBook(bookResult.BookId)
 	if err == orm.ErrNoRows {
-		this.JsonResult(6002, "项目不存在")
+		this.JsonResult(6002, "图书不存在")
 	}
 
 	if err != nil {
-		logs.Error("删除项目 => ", err)
+		logs.Error("删除图书 => ", err)
 		this.JsonResult(6003, "删除失败")
 	}
 
@@ -674,7 +674,7 @@ func (this *BookController) Delete() {
 	this.JsonResult(0, "ok")
 }
 
-//发布项目.
+//发布图书.
 func (this *BookController) Release() {
 
 	identify := this.GetString("identify")
@@ -692,7 +692,7 @@ func (this *BookController) Release() {
 				this.JsonResult(6001, "权限不足")
 			}
 			if err == orm.ErrNoRows {
-				this.JsonResult(6002, "项目不存在")
+				this.JsonResult(6002, "图书不存在")
 			}
 			beego.Error(err)
 			this.JsonResult(6003, "未知错误")
@@ -736,7 +736,7 @@ func (this *BookController) SaveSort() {
 		}
 
 		if bookResult.RoleId == conf.BookObserver {
-			this.JsonResult(6002, "项目不存在或权限不足")
+			this.JsonResult(6002, "图书不存在或权限不足")
 		}
 		bookId = bookResult.BookId
 	}
@@ -777,7 +777,7 @@ func (this *BookController) IsPermission() (*models.BookResult, error) {
 			return book, errors.New("权限不足")
 		}
 		if err == orm.ErrNoRows {
-			return book, errors.New("项目不存在")
+			return book, errors.New("图书不存在")
 		}
 		return book, err
 	}
@@ -788,7 +788,7 @@ func (this *BookController) IsPermission() (*models.BookResult, error) {
 	return book, nil
 }
 
-//从github等拉取下载markdown项目
+//从github等拉取下载markdown图书
 func (this *BookController) DownloadProject() {
 
 	//处理步骤
@@ -808,12 +808,12 @@ func (this *BookController) DownloadProject() {
 	identify := this.GetString("identify")
 	book, _ := models.NewBookResult().FindByIdentify(identify, this.Member.MemberId)
 	if book.BookId == 0 {
-		this.JsonResult(1, "导入失败，只有项目创建人才有权限导入项目")
+		this.JsonResult(1, "导入失败，只有图书创建人才有权限导入图书")
 	}
-	//GitHub项目链接
+	//GitHub图书链接
 	link := this.GetString("link")
 	if strings.ToLower(filepath.Ext(link)) != ".zip" {
-		this.JsonResult(1, "只支持拉取zip压缩的markdown项目")
+		this.JsonResult(1, "只支持拉取zip压缩的markdown图书")
 	}
 	go func() {
 		if file, err := common.CrawlFile(link, "store", 60); err != nil {
@@ -825,7 +825,7 @@ func (this *BookController) DownloadProject() {
 	this.JsonResult(0, "提交成功。下载任务已交由后台执行")
 }
 
-// 从Git仓库拉取项目
+// 从Git仓库拉取图书
 func (this *BookController) GitPull() {
 	//处理步骤
 	//1、接受上传上来的zip文件，并存放到store/temp目录下
@@ -844,9 +844,9 @@ func (this *BookController) GitPull() {
 	identify := this.GetString("identify")
 	book, _ := models.NewBookResult().FindByIdentify(identify, this.Member.MemberId)
 	if book.BookId == 0 {
-		this.JsonResult(1, "导入失败，只有项目创建人才有权限导入项目")
+		this.JsonResult(1, "导入失败，只有图书创建人才有权限导入图书")
 	}
-	//GitHub项目链接
+	//GitHub图书链接
 	link := this.GetString("link")
 	go func() {
 		folder := "store/" + identify
@@ -860,7 +860,7 @@ func (this *BookController) GitPull() {
 	this.JsonResult(0, "提交成功，请耐心等待。")
 }
 
-//上传项目
+//上传图书
 func (this *BookController) UploadProject() {
 	//处理步骤
 	//1、接受上传上来的zip文件，并存放到store/temp目录下
@@ -870,7 +870,7 @@ func (this *BookController) UploadProject() {
 		this.JsonResult(1, err.Error())
 	}
 
-	//普通用户没法上传项目
+	//普通用户没法上传图书
 	if this.Member.Role > 1 {
 		this.JsonResult(1, "您没有操作权限")
 	}
@@ -879,7 +879,7 @@ func (this *BookController) UploadProject() {
 
 	book, _ := models.NewBookResult().FindByIdentify(identify, this.Member.MemberId)
 	if book.BookId == 0 {
-		this.JsonResult(1, "导入失败，只有项目创建人才有权限导入项目")
+		this.JsonResult(1, "导入失败，只有图书创建人才有权限导入图书")
 	}
 	f, h, err := this.GetFile("zipfile")
 	if err != nil {
@@ -899,17 +899,17 @@ func (this *BookController) UploadProject() {
 }
 
 //将zip压缩文件解压并录入数据库
-//@param            book_id             项目id(其实有想不标识了可以不要这个的，但是这里的项目标识只做目录)
-//@param            identify            项目标识
+//@param            book_id             图书id(其实有想不标识了可以不要这个的，但是这里的图书标识只做目录)
+//@param            identify            图书标识
 //@param            zipfile             压缩文件
 //@param            originFilename      上传文件的原始文件名
 func (this *BookController) unzipToData(bookId int, identify, zipFile, originFilename string) {
 
 	//说明：
-	//OSS中的图片存储规则为projects/$identify/项目中图片原路径
-	//本地存储规则为uploads/projects/$identify/项目中图片原路径
+	//OSS中的图片存储规则为projects/$identify/图书中图片原路径
+	//本地存储规则为uploads/projects/$identify/图书中图片原路径
 
-	projectRoot := "" //项目根目录
+	projectRoot := "" //图书根目录
 
 	//解压目录
 	unzipPath := "store/" + identify
@@ -1067,9 +1067,9 @@ func (this *BookController) loadByFolder(bookId int, identify, folder string) {
 	}
 }
 
-//获取文档项目的根目录
+//获取文档图书的根目录
 func (this *BookController) getProjectRoot(fl []common.FileList) (root string) {
-	//获取项目的根目录(感觉这个函数封装的不是很好，有更好的方法，请通过issue告知我，谢谢。)
+	//获取图书的根目录(感觉这个函数封装的不是很好，有更好的方法，请通过issue告知我，谢谢。)
 	i := 1000
 	for _, f := range fl {
 		if !f.IsDir {
@@ -1142,7 +1142,7 @@ func (this *BookController) replaceToAbs(projectRoot string, identify string) {
 	}
 }
 
-//给文档项目打分
+//给文档图书打分
 func (this *BookController) Score() {
 	bookId, _ := this.GetInt(":id")
 	if bookId == 0 {
@@ -1175,5 +1175,5 @@ func (this *BookController) Comment() {
 		}
 		this.JsonResult(0, "评论成功")
 	}
-	this.JsonResult(1, "文档项目不存在")
+	this.JsonResult(1, "文档图书不存在")
 }

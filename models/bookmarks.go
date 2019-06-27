@@ -60,7 +60,7 @@ func (m *Bookmark) InsertOrDelete(uid, docId int) (insert bool, err error) {
 	}
 
 	//新增书签
-	//查询文档id是属于哪个文档项目
+	//查询文档id是属于哪个文档图书
 	o.QueryTable(doc).Filter("document_id", docId).One(doc, "book_id")
 	bookmark.BookId = doc.BookId
 	bookmark.CreateAt = int(time.Now().Unix())
@@ -82,7 +82,7 @@ func (m *Bookmark) Exist(uid, docId int) (exist bool) {
 }
 
 //删除书签
-//1、只有 bookId > 0，则删除bookId所有书签【用于文档项目被删除的情况】
+//1、只有 bookId > 0，则删除bookId所有书签【用于文档图书被删除的情况】
 //2、bookId>0 && uid > 0 ，删除用户的书籍书签【用户用户清空书签的情况】
 //3、uid > 0 && docId>0 ，删除指定书签【用于删除某条书签】
 //4、其余情况不做处理

@@ -20,7 +20,7 @@ type Category struct {
 	Title  string `orm:"size(30);unique"` //分类名称
 	Intro  string //介绍
 	Icon   string //分类icon
-	Cnt    int    //分类下的文档项目统计
+	Cnt    int    //分类下的文档图书统计
 	Sort   int    //排序
 	Status bool   //分类状态，true表示显示，否则表示隐藏
 }
@@ -48,13 +48,13 @@ func (this *Category) AddCates(pid int, cates string) (err error) {
 	return
 }
 
-//删除分类（如果分类下的文档项目不为0，则不允许删除）
+//删除分类（如果分类下的文档图书不为0，则不允许删除）
 func (this *Category) Del(id int) (err error) {
 	var cate = Category{Id: id}
 
 	o := orm.NewOrm()
-	if err = o.Read(&cate); cate.Cnt > 0 { //当前分类下文档项目数量不为0，不允许删除
-		return errors.New("删除失败，当前分类下的问下项目不为0，不允许删除")
+	if err = o.Read(&cate); cate.Cnt > 0 { //当前分类下文档图书数量不为0，不允许删除
+		return errors.New("删除失败，当前分类下的问下图书不为0，不允许删除")
 	}
 
 	if _, err = o.Delete(&cate, "id"); err != nil {

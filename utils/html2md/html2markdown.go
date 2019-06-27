@@ -1,6 +1,3 @@
-//Author:ziyoubiancheng
-//Email: ziyoubiancheng@QQ.COM
-//Date:  2018-02-03
 package html2md
 
 import (

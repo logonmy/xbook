@@ -25,7 +25,7 @@
                     </li>
 
                     <li>
-                        <a href="{{urlfor "BookController.Index"}}" title="我的项目"><i class="fa fa-book" aria-hidden="true"></i> 我的项目</a>
+                        <a href="{{urlfor "BookController.Index"}}" title="我的图书"><i class="fa fa-book" aria-hidden="true"></i> 我的图书</a>
                     </li>
                 {{if eq .Member.Role 0 }}
                     <li>
@@ -100,7 +100,7 @@
                             <a href="{{urlfor "SettingController.Star"}}" title="我的收藏"><i class="fa fa-heart-o" aria-hidden="true"></i> 我的收藏</a>
                         </li>
                         <li>
-                            <a href="{{urlfor "BookController.Index"}}" title="我的项目"><i class="fa fa-book" aria-hidden="true"></i> 我的项目</a>
+                            <a href="{{urlfor "BookController.Index"}}" title="我的图书"><i class="fa fa-book" aria-hidden="true"></i> 我的图书</a>
                         </li>
                         <li>
                             <a href="{{urlfor "SettingController.Qrcode"}}" title="我的二维码"><i class="fa fa-qrcode" aria-hidden="true"></i> 我的二维码</a>

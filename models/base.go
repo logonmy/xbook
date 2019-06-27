@@ -35,7 +35,7 @@ type SitemapDocs struct {
 
 //站点地图数据
 func SitemapData(page, listRows int) (totalRows int64, sitemaps []SitemapDocs) {
-	//获取公开的项目
+	//获取公开的图书
 	var (
 		books   []Book
 		docs    []Document

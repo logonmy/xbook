@@ -15,7 +15,7 @@ import (
 type Comments struct {
 	Id         int
 	Uid        int       `orm:"index"` //用户id
-	BookId     int       `orm:"index"` //文档项目id
+	BookId     int       `orm:"index"` //文档图书id
 	Content    string    //评论内容
 	TimeCreate time.Time //评论时间
 }
@@ -96,7 +96,7 @@ func (this *Score) AddScore(uid, bookId, score int) (err error) {
 	scoreObj.Score = score
 	scoreObj.TimeCreate = time.Now()
 	o.Insert(&scoreObj)
-	if scoreObj.Id > 0 { //评分添加成功，更行当前书籍项目的评分
+	if scoreObj.Id > 0 { //评分添加成功，更行当前书籍图书的评分
 		//评分人数+1
 		var book = Book{BookId: bookId}
 		o.Read(&book, "book_id")
@@ -128,7 +128,7 @@ func (this *Comments) AddComments(uid, bookId int, content string) (err error) {
 		return errors.New(fmt.Sprintf("您距离上次发表评论时间小于 %v 秒，请歇会儿再发。", second))
 	}
 
-	//项目被评论是量+1
+	//图书被评论是量+1
 	var comments = Comments{
 		Uid:        uid,
 		BookId:     bookId,
