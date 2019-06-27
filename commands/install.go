@@ -7,10 +7,10 @@ import (
 
 	"strings"
 
-	"github.com/ziyoubiancheng/xbook/conf"
-	"github.com/ziyoubiancheng/xbook/models"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
+	"github.com/ziyoubiancheng/xbook/conf"
+	"github.com/ziyoubiancheng/xbook/models"
 )
 
 //系统安装.
@@ -57,7 +57,7 @@ func initialization() {
 		member.AuthMethod = "local"
 		member.Nickname = "管理员"
 		member.Role = 0
-		member.Email = "bookstack@qq.cn"
+		member.Email = "admin@ziyoubiancheng.com"
 
 		if err := member.Add(); err != nil {
 			panic("Member.Add => " + err.Error())
@@ -66,13 +66,13 @@ func initialization() {
 
 		book := models.NewBook()
 		book.MemberId = member.MemberId
-		book.BookName = "xbook"
+		book.BookName = "XBOOK"
 		book.Status = 0
 		book.Description = "这是一个xbook演示图书，该图书是由系统初始化时自动创建。"
 		book.CommentCount = 0
 		book.PrivatelyOwned = 0
 		book.CommentStatus = "closed"
-		book.Identify = "bookstack"
+		book.Identify = "xbook"
 		book.DocCount = 0
 		book.CommentCount = 0
 		book.Version = time.Now().Unix()
@@ -97,28 +97,28 @@ func initialization() {
 
 //初始化SEO
 func initSeo() {
-	sqlslice := []string{"insert ignore into `md_seo`(`id`,`page`,`statement`,`title`,`keywords`,`description`) values ('1','index','发现','书栈网(xbook.CN)_分享，让知识传承更久远','{keywords}','{description}'),",
-		"('2','label_list','标签列表页','{title} - 书栈网(xbook.CN)','{keywords}','{description}'),",
-		"('3','label_content','标签内容页','{title} - 书栈网(xbook.CN)','{keywords}','{description}'),",
-		"('4','book_info','文档信息页','{title} - 书栈网(xbook.CN)','{keywords}','{description}'),",
-		"('5','book_read','文档阅读页','{title} - 书栈网(xbook.CN)','{keywords}','{description}'),",
-		"('6','search_result','搜索结果页','{title} - 书栈网(xbook.CN)','{keywords}','{description}'),",
-		"('7','user_basic','用户基本信息设置页','{title}  - 书栈网(xbook.CN)','{keywords}','{description}'),",
-		"('8','user_pwd','用户修改密码页','{title}  - 书栈网(xbook.CN)','{keywords}','{description}'),",
-		"('9','project_list','图书列表页','{title}  - 书栈网(xbook.CN)','{keywords}','{description}'),",
-		"('11','login','登录页','{title} - 书栈网(xbook.CN)','{keywords}','{description}'),",
-		"('12','reg','注册页','{title} - 书栈网(xbook.CN)','{keywords}','{description}'),",
-		"('13','findpwd','找回密码','{title} - 书栈网(xbook.CN)','{keywords}','{description}'),",
-		"('14','manage_dashboard','仪表盘','{title} - 书栈网(xbook.CN)','{keywords}','{description}'),",
-		"('15','manage_users','用户管理','{title} - 书栈网(xbook.CN)','{keywords}','{description}'),",
-		"('16','manage_users_edit','用户编辑','{title} - 书栈网(xbook.CN)','{keywords}','{description}'),",
-		"('17','manage_project_list','图书列表','{title} - 书栈网(xbook.CN)','{keywords}','{description}'),",
-		"('18','manage_project_edit','图书编辑','{title} - 书栈网(xbook.CN)','{keywords}','{description}'),",
-		"('19','cate','首页','{title} - 书栈网(xbook.CN)','{keywords}','{description}'),",
-		"('20','ucenter-share','用户主页','{title} - 书栈网(xbook.CN)','{keywords}','{description}'),",
-		"('21','ucenter-collection','用户收藏','{title} - 书栈网(xbook.CN)','{keywords}','{description}'),",
-		"('22','ucenter-fans','用户粉丝','{title} - 书栈网(xbook.CN)','{keywords}','{description}'),",
-		"('23','ucenter-follow','用户关注','{title} - 书栈网(xbook.CN)','{keywords}','{description}');",
+	sqlslice := []string{"insert ignore into `md_seo`(`id`,`page`,`statement`,`title`,`keywords`,`description`) values ('1','index','发现','(xbook.CN)_分享，让知识传承更久远','{keywords}','{description}'),",
+		"('2','label_list','标签列表页','{title} - (xbook.CN)','{keywords}','{description}'),",
+		"('3','label_content','标签内容页','{title} - (xbook.CN)','{keywords}','{description}'),",
+		"('4','book_info','文档信息页','{title} - (xbook.CN)','{keywords}','{description}'),",
+		"('5','book_read','文档阅读页','{title} - (xbook.CN)','{keywords}','{description}'),",
+		"('6','search_result','搜索结果页','{title} - (xbook.CN)','{keywords}','{description}'),",
+		"('7','user_basic','用户基本信息设置页','{title}  - (xbook.CN)','{keywords}','{description}'),",
+		"('8','user_pwd','用户修改密码页','{title}  - (xbook.CN)','{keywords}','{description}'),",
+		"('9','project_list','图书列表页','{title}  - (xbook.CN)','{keywords}','{description}'),",
+		"('11','login','登录页','{title} - (xbook.CN)','{keywords}','{description}'),",
+		"('12','reg','注册页','{title} - (xbook.CN)','{keywords}','{description}'),",
+		"('13','findpwd','找回密码','{title} - (xbook.CN)','{keywords}','{description}'),",
+		"('14','manage_dashboard','仪表盘','{title} - (xbook.CN)','{keywords}','{description}'),",
+		"('15','manage_users','用户管理','{title} - (xbook.CN)','{keywords}','{description}'),",
+		"('16','manage_users_edit','用户编辑','{title} - (xbook.CN)','{keywords}','{description}'),",
+		"('17','manage_project_list','图书列表','{title} - (xbook.CN)','{keywords}','{description}'),",
+		"('18','manage_project_edit','图书编辑','{title} - (xbook.CN)','{keywords}','{description}'),",
+		"('19','cate','首页','{title} - (xbook.CN)','{keywords}','{description}'),",
+		"('20','ucenter-share','用户主页','{title} - (xbook.CN)','{keywords}','{description}'),",
+		"('21','ucenter-collection','用户收藏','{title} - (xbook.CN)','{keywords}','{description}'),",
+		"('22','ucenter-fans','用户粉丝','{title} - (xbook.CN)','{keywords}','{description}'),",
+		"('23','ucenter-follow','用户关注','{title} - (xbook.CN)','{keywords}','{description}');",
 	}
 	if _, err := orm.NewOrm().Raw(strings.Join(sqlslice, "")).Exec(); err != nil {
 		beego.Error(err.Error())
