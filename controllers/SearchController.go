@@ -8,8 +8,8 @@ import (
 	"github.com/ziyoubiancheng/xbook/conf"
 	"github.com/ziyoubiancheng/xbook/utils"
 
-	"github.com/ziyoubiancheng/xbook/models"
 	"github.com/astaxie/beego"
+	"github.com/ziyoubiancheng/xbook/models"
 )
 
 type SearchController struct {
@@ -56,7 +56,6 @@ func (this *SearchController) Result() {
 	}
 
 	client := models.NewElasticSearchClient()
-
 	if client.On { // elasticsearch 进行全文搜索
 		result, err := models.NewElasticSearchClient().Search(wd, page, size, isSearchDoc)
 		if err != nil {

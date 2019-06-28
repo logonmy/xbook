@@ -101,7 +101,7 @@ type ElasticSearchResult struct {
 func NewElasticSearchClient() (client *ElasticSearchClient) {
 	client = &ElasticSearchClient{
 		Host:    GetOptionValue("ELASTICSEARCH_HOST", "http://localhost:9200/"),
-		Index:   "bookstack",
+		Index:   "xbook",
 		Type:    "fulltext",
 		On:      GetOptionValue("ELASTICSEARCH_ON", "false") == "true",
 		Timeout: 10 * time.Second,
