@@ -47,10 +47,10 @@ var (
 )
 
 func init() {
-	//加载分词字典
-	go func() {
-		Segmenter.LoadDictionary(BasePath + "/dictionary/dictionary.txt")
-	}()
+	//	//加载分词字典
+	//	go func() {
+	//		Segmenter.LoadDictionary(BasePath + "/dictionary/dictionary.txt")
+	//	}()
 	langs.Store("zh", "中文")
 	langs.Store("en", "英文")
 	langs.Store("other", "其他")

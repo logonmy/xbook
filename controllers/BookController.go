@@ -551,7 +551,7 @@ func (this *BookController) Create() {
 		this.JsonResult(6006, "图书标识已存在")
 	}
 
-	book.Label = utils.SegWord(bookName)
+	//book.Label = utils.SegWord(bookName)
 	book.BookName = bookName
 	book.Author = author
 	book.AuthorURL = authorURL
