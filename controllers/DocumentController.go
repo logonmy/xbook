@@ -36,12 +36,12 @@ type DocumentController struct {
 // 解析并提取版本控制的commit内容
 func parseGitCommit(str string) (cont, commit string) {
 	var slice []string
-	arr := strings.Split(str, "<bookstack-git>")
+	arr := strings.Split(str, "<xbook-git>")
 	if len(arr) > 1 {
 		slice = append(slice, arr[0])
 		str = strings.Join(arr[1:], "")
 	}
-	arr = strings.Split(str, "</bookstack-git>")
+	arr = strings.Split(str, "</xbook-git>")
 	if len(arr) > 1 {
 		slice = append(slice, arr[1:]...)
 		commit = arr[0]
@@ -895,9 +895,9 @@ func (this *DocumentController) Content() {
 	// 文档拆分
 	gq, err := goquery.NewDocumentFromReader(strings.NewReader(content))
 	if err == nil {
-		seg := gq.Find("bookstack-split").Text()
+		seg := gq.Find("xbook-split").Text()
 		if strings.Contains(seg, "#") {
-			markdown = strings.Replace(markdown, fmt.Sprintf("<bookstack-split>%v</bookstack-split>", seg), "", -1)
+			markdown = strings.Replace(markdown, fmt.Sprintf("<xbook-split>%v</xbook-split>", seg), "", -1)
 			err := new(models.Document).SplitMarkdownAndStore(seg, markdown, docId)
 			if err == nil {
 				this.JsonResult(0, "true")
@@ -926,11 +926,11 @@ func (this *DocumentController) Content() {
 	isSummary := false
 	isAuto := false
 	//替换文档中的url链接
-	if strings.ToLower(doc.Identify) == "summary.md" && (strings.Contains(markdown, "<bookstack-summary></bookstack-summary>") || strings.Contains(doc.Markdown, "<bookstack-summary/>")) {
-		//如果标识是summary.md，并且带有bookstack的标签，则表示更新目录
+	if strings.ToLower(doc.Identify) == "summary.md" && (strings.Contains(markdown, "<xbook-summary></xbook-summary>") || strings.Contains(doc.Markdown, "<xbook-summary/>")) {
+		//如果标识是summary.md，并且带有xbook的标签，则表示更新目录
 		isSummary = true
 		//要清除，避免每次保存的时候都要重新排序
-		replaces := []string{"<bookstack-summary></bookstack-summary>", "<bookstack-summary/>"}
+		replaces := []string{"<xbook-summary></xbook-summary>", "<xbook-summary/>"}
 		for _, r := range replaces {
 			markdown = strings.Replace(markdown, r, "", -1)
 		}
@@ -942,7 +942,7 @@ func (this *DocumentController) Content() {
 		access = access && op.OptionValue == "true"
 	}
 	if access && strings.ToLower(doc.Identify) == "summary.md" && (strings.Contains(markdown, "<spider></spider>") || strings.Contains(doc.Markdown, "<spider/>")) {
-		//如果标识是summary.md，并且带有bookstack的标签，则表示更新目录
+		//如果标识是summary.md，并且带有xbook的标签，则表示更新目录
 		isSummary = true
 		//要清除，避免每次保存的时候都要重新排序
 		replaces := []string{"<spider></spider>", "<spider/>"}
@@ -952,7 +952,7 @@ func (this *DocumentController) Content() {
 		content, markdown, _ = new(models.Document).XbookCrawl(content, markdown, bookId, this.Member.MemberId)
 	}
 
-	if strings.Contains(markdown, "<bookstack-auto></bookstack-auto>") || strings.Contains(doc.Markdown, "<bookstack-auto/>") {
+	if strings.Contains(markdown, "<xbook-auto></xbook-auto>") || strings.Contains(doc.Markdown, "<xbook-auto/>") {
 		//自动生成文档内容
 
 		var imd, icont string
@@ -965,8 +965,8 @@ func (this *DocumentController) Content() {
 			imd, icont = newDoc.XbookAuto(bookId, docId)
 		}
 
-		markdown = strings.Replace(markdown, "<bookstack-auto></bookstack-auto>", imd, -1)
-		content = strings.Replace(content, "<bookstack-auto></bookstack-auto>", icont, -1)
+		markdown = strings.Replace(markdown, "<xbook-auto></xbook-auto>", imd, -1)
+		content = strings.Replace(content, "<xbook-auto></xbook-auto>", icont, -1)
 		isAuto = true
 	}
 	content = this.replaceLinks(identify, content, isSummary)

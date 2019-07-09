@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="/static/editor.md/css/editormd.preview.css" />
 </head>
 <body>
-    <div id="bookstack-render-data"></div>
-    <div id="bookstack-links"></div>
-    <textarea id="bookstack-data" style="display:none;">{{.Markdown}}</textarea>
+    <div id="xbook-render-data"></div>
+    <div id="xbook-links"></div>
+    <textarea id="xbook-data" style="display:none;">{{.Markdown}}</textarea>
     <script src="/static/jquery/1.12.4/jquery.js"></script>
     <script src="/static/editor.md/lib/marked.min.js"></script>
     <script src="/static/editor.md/lib/prettify.min.js"></script>
@@ -22,7 +22,7 @@
     <script src="/static/editor.md/editormd.js"></script>
 <script type="text/javascript">
     $(function() {
-        editormd.markdownToHTML("bookstack-render-data", {
+        editormd.markdownToHTML("xbook-render-data", {
            htmlDecode      : "style,script,iframe",  // you can filter tags decode
            atLink    : false,    // disable @link
            emailLink : false,    // disable email address auto link
@@ -31,9 +31,9 @@
             tex  : true,
             flowChart : true,
             sequenceDiagram: true,
-           markdown:$("#bookstack-data").val(),
+           markdown:$("#xbook-data").val(),
         });
-        $.post(location.href,{content:$("#bookstack-render-data").html()},function (res) {
+        $.post(location.href,{content:$("#xbook-render-data").html()},function (res) {
             console.log(res);
         });
     });

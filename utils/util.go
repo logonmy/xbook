@@ -92,7 +92,7 @@ func ScoreFloat(score int) string {
 //渲染markdown为html并录入数据库
 func RenderDocumentById(id int) {
 	//使用chromium-browser
-	//	chromium-browser --headless --disable-gpu --screenshot --no-sandbox --window-size=320,480 http://www.bookstack.cn
+	//	chromium-browser --headless --disable-gpu --screenshot --no-sandbox --window-size=320,480 http://www.xbook.cn
 	link := "http://localhost:" + beego.AppConfig.DefaultString("httpport", "8080") + "/local-render?id=" + strconv.Itoa(id)
 	name := beego.AppConfig.DefaultString("chrome", "chromium-browser")
 	args := []string{"--headless", "--disable-gpu", "--screenshot", "--no-sandbox", "--window-size=320,480", link}
@@ -115,7 +115,7 @@ func RenderDocumentById(id int) {
 
 //使用chrome采集网页HTML
 func CrawlByChrome(urlStr string, bookIdentify string) (cont string, err error) {
-	if strings.Contains(strings.ToLower(urlStr), "bookstack") {
+	if strings.Contains(strings.ToLower(urlStr), "xbook") {
 		return
 	}
 	var (
@@ -254,7 +254,7 @@ func CrawlHtml2Markdown(urlstr string, contType int, force bool, intelligence in
 
 	imageMap := make(map[string]string)
 
-	if strings.Contains(urlstr, "bookstack.cn") {
+	if strings.Contains(urlstr, "xbook.cn") {
 		return
 	}
 

@@ -29,7 +29,7 @@ function show_copy_btn() {
 
 function load_doc(url,wd,without_history) {
     NProgress.start();
-    $.get(url+"?fr=bookstack",function (res) {
+    $.get(url+"?fr=xbook",function (res) {
         if(res.errcode === 0){
             var body = res.data.body;
             var doc_title = res.data.doc_title;

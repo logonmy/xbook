@@ -159,11 +159,11 @@ $(function () {
            var cm = window.editor.cm;
            var selection = cm.getSelection();
            if (selection === "") {
-               cm.replaceSelection("<bookstack-summary></bookstack-summary>" + selection);
+               cm.replaceSelection("<xbook-summary></xbook-summary>" + selection);
            }else {
                var selectionText = selection.split("\n");
                for (var i = 0, len = selectionText.length; i < len; i++) {
-                   selectionText[i] = (selectionText[i] === "") ? "" : "<bookstack-summary></bookstack-summary>" + selectionText[i];
+                   selectionText[i] = (selectionText[i] === "") ? "" : "<xbook-summary></xbook-summary>" + selectionText[i];
                }
                cm.replaceSelection(selectionText.join("\n"));
            }
@@ -171,11 +171,11 @@ $(function () {
            var cm = window.editor.cm;
            var selection = cm.getSelection();
            if (selection === "") {
-               cm.replaceSelection("<bookstack-auto></bookstack-auto>" + selection);
+               cm.replaceSelection("<xbook-auto></xbook-auto>" + selection);
            }else {
                var selectionText = selection.split("\n");
                for (var i = 0, len = selectionText.length; i < len; i++) {
-                   selectionText[i] = (selectionText[i] === "") ? "" : "<bookstack-auto></bookstack-auto>" + selectionText[i];
+                   selectionText[i] = (selectionText[i] === "") ? "" : "<xbook-auto></xbook-auto>" + selectionText[i];
                }
                cm.replaceSelection(selectionText.join("\n"));
            }
@@ -183,9 +183,9 @@ $(function () {
            var cm = window.editor.cm;
            var selection = cm.getSelection();
            var cursor    = cm.getCursor();
-           cm.replaceSelection("<bookstack-git>" + selection + "</bookstack-git>");
+           cm.replaceSelection("<xbook-git>" + selection + "</xbook-git>");
            console.log(cursor.line,cm.lineCount());
-           // cm.setCursor(cursor.line, cursor.ch + '<bookstack-git>'.length);
+           // cm.setCursor(cursor.line, cursor.ch + '<xbook-git>'.length);
        }else if(name=="multi"){//批量创建文档
             $("#ModalMulti").modal("show");
        }else if(name=="spider"){//爬虫采集
