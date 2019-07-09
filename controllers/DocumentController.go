@@ -256,8 +256,6 @@ func (this *DocumentController) Read() {
 		"description": beego.Substr(bodyText+" "+bookResult.Description, 0, 200),
 	})
 
-	existBookmark := new(models.Bookmark).Exist(this.Member.MemberId, doc.DocumentId)
-
 	doc.Vcnt = doc.Vcnt + 1
 
 	if this.IsAjax() {
@@ -274,7 +272,7 @@ func (this *DocumentController) Read() {
 		data.Body = doc.Release
 		data.Id = doc.DocumentId
 		data.Title = this.Data["SeoTitle"].(string)
-		data.Bookmark = existBookmark
+		data.Bookmark = false
 		data.View = doc.Vcnt
 		data.UpdatedAt = doc.ModifyTime.Format("2006-01-02 15:04:05")
 		//data.Body = doc.Markdown
@@ -314,7 +312,7 @@ func (this *DocumentController) Read() {
 	if wd := this.GetString("wd"); strings.TrimSpace(wd) != "" {
 		this.Data["Keywords"] = models.NewElasticSearchClient().SegWords(wd)
 	}
-	this.Data["Bookmark"] = existBookmark
+	this.Data["Bookmark"] = false
 	this.Data["Model"] = bookResult
 	this.Data["Book"] = bookResult //文档下载需要用到Book变量
 	this.Data["Result"] = template.HTML(tree)

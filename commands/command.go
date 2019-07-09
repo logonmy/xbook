@@ -85,7 +85,6 @@ func RegisterModel() {
 		new(models.FriendLink),
 		new(models.ReadCount),
 		new(models.ReadRecord),
-		new(models.Bookmark),
 		models.NewRelateBook(),
 	)
 	migrate.RegisterMigration()

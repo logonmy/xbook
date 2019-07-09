@@ -82,8 +82,6 @@ func init() {
 	beego.Router("/book/setting/token", &controllers.BookController{}, "post:CreateToken")
 	beego.Router("/book/setting/delete", &controllers.BookController{}, "post:Delete")
 
-	beego.Router("/bookmark/:id", &controllers.BookmarkController{}, "get:Bookmark")
-	beego.Router("/bookmark/list/:book_id", &controllers.BookmarkController{}, "get:List")
 	//阅读记录
 	beego.Router("/record/:book_id", &controllers.RecordController{}, "get:List")
 	beego.Router("/record/:book_id/clear", &controllers.RecordController{}, "get:Clear")
