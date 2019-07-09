@@ -104,9 +104,6 @@
                                         {{/*</a>*/}}
 
                                         {{end}}
-                                        <a :href="'/book/'+ item.identify +'/generate'" class="btn btn-default btn-sm ajax-get confirm" :data-identify="item.identify">
-                                            <i class="fa fa-book"></i> 生成下载文档
-                                        </a>
                                         <!-- Split button -->
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-default"><i class="fa fa-cloud-upload"></i> 导入图书</button>
@@ -130,19 +127,6 @@
                                                         <i class="fa fa-git"></i> Git Clone 导入
                                                     </a>
                                                 </li>
-                                            </ul>
-                                        </div>
-                                        <!-- Split button -->
-                                        <div class="btn-group btn-group-download">
-                                            <button type="button" class="btn btn-default"><i class="fa fa-cloud-download"></i> 导出图书</button>
-                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <span class="caret"></span>
-                                                <span class="sr-only">Toggle Dropdown</span>
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <li><a :href="'{{urlfor "DocumentController.Export" ":key" ""}}' + item.identify+'?output=pdf'">导出 PDF</a></li>
-                                                <li><a :href="'{{urlfor "DocumentController.Export" ":key" ""}}' + item.identify+'?output=mobi'">导出 MOBI</a></li>
-                                                <li><a :href="'{{urlfor "DocumentController.Export" ":key" ""}}' + item.identify+'?output=epub'">导出 EPUB</a></li>
                                             </ul>
                                         </div>
                                     </div>
