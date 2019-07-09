@@ -275,7 +275,7 @@ func (this *DocumentController) Read() {
 		data.Bookmark = false
 		data.View = doc.Vcnt
 		data.UpdatedAt = doc.ModifyTime.Format("2006-01-02 15:04:05")
-		//data.Body = doc.Markdown
+		data.Body = doc.Markdown
 
 		this.JsonResult(0, "ok", data)
 	}
